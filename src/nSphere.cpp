@@ -57,7 +57,7 @@ void nSphere::addPoint() {
     
     points.push_back(p);
     
-    if (six == true) {
+    if (boolAlternateMainPoints == true) {
         altMainPoints.push_back(p);
     }
     
@@ -87,7 +87,7 @@ void nSphere::update() {
     if (ofGetFrameNum() % adjusted == 0) {
         
         // If we're doing shapes we need to add and remove in groups
-        if (three == true) {
+        if (boolMiniMesh == true) {
             
             for (int i = 0; i < shapeVertices; i++) {
                 addPoint();
@@ -107,7 +107,7 @@ void nSphere::update() {
             }
         }
         
-        if (five == true) {
+        if (boolAlternatePoints == true) {
             addAltPoint();
             
             if (altPoints.size() >= maxPoints * pointMultiplier * 2) {
@@ -116,10 +116,10 @@ void nSphere::update() {
         }
         
         // Check for when alt points get removed
-        if (six == true) {
+        if (boolAlternateMainPoints == true) {
             if (altMainPoints.size() >= maxPoints * pointMultiplier * 1.5) {
                 // If we're doing shapes we need to remove in groups
-                if (three == true) {
+                if (boolMiniMesh == true) {
                     
                     for (int i = 0; i < shapeVertices; i++) {
                         altMainPoints.erase(altMainPoints.begin());
@@ -133,10 +133,30 @@ void nSphere::update() {
         }
         
     }
+    
+    // Update all the points individually
+    for (int i = 0; i < (points.size() - 1); i++) {
+        nSpherePoint *p = &points[i];
+        p->update();
+    }
+    
+//    for (int i = 0; i < (altPoints.size() - 1); i++) {
+//        nSpherePoint *p = &altPoints[i];
+//        p->update();
+//    }
+    
+    for (int i = 0; i < (altMainPoints.size() - 1); i++) {
+        nSpherePoint *p = &altMainPoints[i];
+        p->update();
+    }
+    
+    
 
 }
 
 void nSphere::draw() {
+//    ofEnableBlendMode(OF_BLENDMODE_ADD);
+//    glPointSize(2);
 
     if (points.size() > 0) {
         
@@ -147,10 +167,10 @@ void nSphere::draw() {
         for (int i = 0; i < (points.size() - 1); i++) {
             // Pointers, this hopefully works now
             nSpherePoint *p = &points[i];
-            p->update();
+//            p->update();
             
             // Draw spheres at vertices, really inefficient
-            if (four) {
+            if (boolVertex) {
                 ofSpherePrimitive sphere = ofSpherePrimitive(2, 4);
                 sphere.setPosition(p->position.x, p->position.y, p->position.z);
                 ofSetColor(255, 125, 125, 50);
@@ -158,7 +178,7 @@ void nSphere::draw() {
             }
             
             // Meta mesh, previously points as points
-            if (one == true) {
+            if (boolMetaMesh == true) {
                 metaMesh.addVertex(ofVec3f(p->position.x, p->position.y, p->position.z));
                 
                 metaMesh.addIndex(i);
@@ -179,7 +199,7 @@ void nSphere::draw() {
             }
             
             // Lines connecting two points
-            if (two == true) {
+            if (boolLines == true) {
                 nSpherePoint *q = &points[i + 1];
                 
                 float distance = ofDist(p->position.x, p->position.y, p->position.z, q->position.x, q->position.y, q->position.z);
@@ -195,7 +215,7 @@ void nSphere::draw() {
             }
             
             // Mesh between [shapeVertices] points (something like 8)
-            if (three == true) {
+            if (boolMiniMesh == true) {
 
                 if (i + (shapeVertices - 1) < points.size() && (i % shapeVertices == 0)) {
                     nSpherePoint *q = &points[i + 1];
@@ -217,7 +237,7 @@ void nSphere::draw() {
                         alpha = alpha * .75;
                     }
                     
-                    //                if (five == true) {
+                    //                if (boolAlternatePoints == true) {
                     //                    strokeWeight(1);
                     //                } else {
                     //                    noStroke();
@@ -249,8 +269,8 @@ void nSphere::draw() {
         
         
         
-        // Alternate line points
-        if (five) {
+        // Alternate points
+        if (boolAlternatePoints) {
             
             if (altPoints.size() > 0) {
             
@@ -288,8 +308,8 @@ void nSphere::draw() {
             }
         }
         
-        // Alternate line points
-        if (six) {
+        // Alternate lines
+        if (boolAlternateMainPoints) {
             
             if (altMainPoints.size() > 0) {
                 

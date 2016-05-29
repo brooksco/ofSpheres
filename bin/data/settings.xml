@@ -1,0 +1,18 @@
+<group>
+	<Misc_>
+		<blur>1</blur>
+	</Misc_>
+<group/>
+<Controls>
+		<blur>1</blur>
+	<meta_mesh_fill>1</meta_mesh_fill>
+		<lines>0</lines>
+	<meta_mesh__fill_>1</meta_mesh__fill_>
+	<mini_meshes__fill_>1</mini_meshes__fill_>
+		<vertex_spheres>0</vertex_spheres>
+	<alternate_points>1</alternate_points>
+	<alternate_main_points__color_>1</alternate_main_points__color_>
+	<vibration>0</vibration>
+	<center_sphere>1</center_sphere>
+	</Controls>
+</group>

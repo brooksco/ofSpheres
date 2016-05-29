@@ -40,7 +40,7 @@ void nSpherePoint::update() {
 //        position.y = position.y + ofMap(ofSignedNoise(noise.y), -1, 1, -1, 1);
 //        position.z = position.z + ofMap(ofSignedNoise(noise.z), -1, 1, -1, 1);
 //    }
-    if (seven) {
+    if (boolWiggle) {
         position.x = position.x + ofMap(ofRandom(10), 0, 10, -.5, .5);
         position.y = position.y + ofMap(ofRandom(10), 0, 10, -.5, .5);
         position.z = position.z + ofMap(ofRandom(10), 0, 10, -.5, .5);

@@ -2,6 +2,9 @@
 
 #include "ofMain.h"
 #include "nSphere.h"
+#include "ofxBlur.h"
+#include "ofxGUI.h"
+#include "ofxXmlSettings.h"
 
 class ofApp : public ofBaseApp{
 
@@ -9,6 +12,8 @@ class ofApp : public ofBaseApp{
 		void setup();
 		void update();
 		void draw();
+    
+        void exit();
 
 		void keyPressed(int key);
 		void keyReleased(int key);
@@ -25,16 +30,46 @@ class ofApp : public ofBaseApp{
         ofEasyCam easyCam;
         ofCamera cam;
         vector<nSphere> nSpheres;
+    
+        // Blur
+        ofxBlur blur;
+    
+        // GUI
+        ofxPanel gui;
+    
+        // GUI groups
+        ofxGuiGroup miscGroup;
+    
+        // GUI toggles
+        ofxToggle metaMeshToggle;
+        ofxToggle linesToggle;
+        ofxToggle miniMeshToggle;
+        ofxToggle vertexToggle;
+        ofxToggle blurToggle;
+        ofxToggle alternatePointsToggle;
+        ofxToggle alternateMainPointsToggle;
+        ofxToggle wiggleToggle;
+        ofxToggle centerSphereToggle;
+    
+//        // GUI buttons;
+//        ofxButton blurRefreshButton;
+    
+        // XML settings
+        ofxXmlSettings settings;
+
 };
 
 // Global variables
-extern bool one;
-extern bool two;
-extern bool three;
-extern bool four;
-extern bool five;
-extern bool six;
-extern bool seven;
+
+extern bool boolMetaMesh;
+extern bool boolLines;
+extern bool boolMiniMesh;
+extern bool boolVertex;
+extern bool boolAlternatePoints;
+extern bool boolAlternateMainPoints;
+extern bool boolWiggle;
+extern bool boolCenterSphere;
+
 extern int shapeVertices;
 extern int pointMultiplier;
 extern int radiusMultiplier;

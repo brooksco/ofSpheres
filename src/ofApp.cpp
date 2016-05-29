@@ -1,12 +1,15 @@
 #include "ofApp.h"
 
-bool one = true;
-bool two = true;
-bool three = true;
-bool four = false;
-bool five = true;
-bool six = true;
-bool seven = true;
+bool boolMetaMesh = true;
+bool boolLines = true;
+bool boolMiniMesh = true;
+bool boolVertex = false;
+bool boolAlternatePoints = true;
+bool boolAlternateMainPoints = true;
+bool boolWiggle = true;
+bool boolCenterSphere = false;
+
+bool showGui = true;
 
 int shapeVertices = 8;
 int pointMultiplier = 200; //200
@@ -28,8 +31,8 @@ int videoScreensCounter = 0;
 void ofApp::setup(){
 
     ofSetFrameRate(60);
-//    ofSetWindowShape(1280, 800);
-    ofSetWindowShape(1920, 1080);
+    ofSetWindowShape(1280, 800);
+//    ofSetWindowShape(1920, 1080);
     ofEnableSmoothing();
     
     centerX = ofGetWindowWidth() / 2;
@@ -45,7 +48,7 @@ void ofApp::setup(){
     
     nSphere nSphere3 = nSphere(centerVec, radiusMultiplier * 30, 8, 3);
     nSphere nSphere4 = nSphere(centerVec, radiusMultiplier * 42, 10, 6);
-//
+    
     nSphere nSphere5 = nSphere(centerVec, radiusMultiplier * 70, 30, 16);
     nSphere nSphere6 = nSphere(centerVec, radiusMultiplier * 120, 12, 16);
     
@@ -75,25 +78,77 @@ void ofApp::setup(){
     
     easyCam.setPosition(camPos);
     easyCam.lookAt(lookAtPos, upVector);
+    
+    // Setup blur
+//    blur.setup(ofGetWindowWidth(), ofGetWindowHeight(), blurRadiusSlider, blurShapeSlider, blurPassesSlider, blurDownsampleSlider);
+    blur.setup(ofGetWindowWidth(), ofGetWindowHeight(), 50, .2, 1, .1);
+    
+    
+    // Setup GUI
+    
+    int guiWidth = 300;
+    
+    gui.setDefaultWidth(guiWidth);
+    gui.setup();
+    gui.setPosition(20, 20);
+    
+    // Misc group
+    miscGroup.setup("Controls");
+    miscGroup.add(metaMeshToggle.setup("meta mesh (fill)", boolMetaMesh));
+    miscGroup.add(linesToggle.setup("lines", boolLines));
+    miscGroup.add(miniMeshToggle.setup("mini meshes (fill)", boolMiniMesh));
+    miscGroup.add(vertexToggle.setup("vertex spheres", boolVertex));
+    miscGroup.add(alternatePointsToggle.setup("alternate points", boolAlternatePoints));
+    miscGroup.add(alternateMainPointsToggle.setup("alternate main points (color)", boolAlternateMainPoints));
+    miscGroup.add(wiggleToggle.setup("vibration", boolWiggle));
+    miscGroup.add(centerSphereToggle.setup("center sphere", boolCenterSphere));
+
+    
+    miscGroup.add(blurToggle.setup("blur", false));
+    
+    gui.add(&miscGroup);
+    miscGroup.setWidthElements(guiWidth);
+    
+    // Load previous settings
+    gui.loadFromFile("settings.xml");
+
+
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
+    
+    // Update settings from GUI
+    boolMetaMesh = metaMeshToggle;
+    boolLines = linesToggle;
+    boolMiniMesh = miniMeshToggle;
+    boolVertex = vertexToggle;
+    boolAlternatePoints = alternatePointsToggle;
+    boolAlternateMainPoints = alternateMainPointsToggle;
+    boolWiggle = wiggleToggle;
+    boolCenterSphere = centerSphereToggle;
+    
+    for (int i = 0; i < nSpheres.size(); i++) {
+        nSpheres[i].update();
+    }
     
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
     ofBackground(0, 0, 0);
+//    glPointSize(2);
     ofSetColor(255, 255, 255);
     
-    for (int i = 0; i < nSpheres.size(); i++) {
-//        nSphere currentSphere = nSpheres[i];
-        
-        nSpheres[i].update();
-        
+    if (blurToggle == true) {
+        blur.begin();
+        ofBackground(0, 0, 0);
+        ofEnableBlendMode(OF_BLENDMODE_ADD);
+    }
+
+//    ofEnableBlendMode(OF_BLENDMODE_ALPHA);
     
-        
+    for (int i = 0; i < nSpheres.size(); i++) {
         
 //        long eyeX = (ofGetWindowWidth() / 3) * cos(ofGetFrameNum() * 0.0008);
 //        long eyeZ = (ofGetWindowWidth() / 2) * sin(ofGetFrameNum() * 0.0008);
@@ -119,21 +174,12 @@ void ofApp::draw(){
 //        
 //        cam.setPosition(camPos);
 //        cam.lookAt(lookAtPos, upVector);
-//        
-//        
+
 //        cam.begin();
+        
         easyCam.begin();
         
         ofPushMatrix();
-        
-        // Reference box
-//        ofBoxPrimitive box = ofBoxPrimitive(50, 50, 50);
-//        box.setPosition(0, 0, 0);
-//        ofSetColor(255, 125, 125);
-//        box.draw();
-        // end reference box
-        
-//        ofPushMatrix();
         
         ofTranslate(nSpheres[i].position.x, nSpheres[i].position.y, nSpheres[i].position.z);
         
@@ -141,14 +187,87 @@ void ofApp::draw(){
         ofRotateY(ofGetFrameNum() * nSpheres[i].velocity.y * velocityMultiplier);
         ofRotateZ(ofGetFrameNum() * nSpheres[i].velocity.z * velocityMultiplier);
         
-//        ofPopMatrix();
-        
         nSpheres[i].draw();
         ofPopMatrix();
+        
+        // Center sphere
+        if (boolCenterSphere == true) {
+            ofMesh sphere = ofMesh::sphere(20, 16, OF_PRIMITIVE_TRIANGLE_STRIP);
+//                        ofSetColor(255, 255, 255, 255);
+            ofSetColor(0, 0, 0, 255);
+            
+            sphere.draw();
+        }
+
+        
         easyCam.end();
         
 //        cam.end();
     }
+    
+
+  
+//    for (int i = 0; i < nSpheres.size(); i++) {
+//        easyCam.begin();
+//        
+//        ofPushMatrix();
+//        
+//        ofTranslate(nSpheres[i].position.x, nSpheres[i].position.y, nSpheres[i].position.z);
+//        
+//        ofRotateX(ofGetFrameNum() * nSpheres[i].velocity.x * velocityMultiplier);
+//        ofRotateY(ofGetFrameNum() * nSpheres[i].velocity.y * velocityMultiplier);
+//        ofRotateZ(ofGetFrameNum() * nSpheres[i].velocity.z * velocityMultiplier);
+//
+//        nSpheres[i].draw();
+//        ofPopMatrix();
+//        easyCam.end();
+//    }
+    
+    
+    if (blurToggle == true) {
+        blur.end();
+        blur.draw();
+    }
+    
+    // Draw it a second time
+    if (blurToggle == true) {
+        
+        //        ofEnableBlendMode(OF_BLENDMODE_ADD);
+        //            ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+        
+        for (int i = 0; i < nSpheres.size(); i++) {
+            easyCam.begin();
+            
+            ofPushMatrix();
+            
+            ofTranslate(nSpheres[i].position.x, nSpheres[i].position.y, nSpheres[i].position.z);
+            
+            ofRotateX(ofGetFrameNum() * nSpheres[i].velocity.x * velocityMultiplier);
+            ofRotateY(ofGetFrameNum() * nSpheres[i].velocity.y * velocityMultiplier);
+            ofRotateZ(ofGetFrameNum() * nSpheres[i].velocity.z * velocityMultiplier);
+            
+            nSpheres[i].draw();
+            ofPopMatrix();
+            
+            // Center sphere
+            if (boolCenterSphere == true) {
+                ofMesh sphere = ofMesh::sphere(20, 16, OF_PRIMITIVE_TRIANGLE_STRIP);
+//                            ofSetColor(255, 255, 255, 255);
+                ofSetColor(0, 0, 0, 255);
+                
+                sphere.draw();
+            }
+            
+            
+            easyCam.end();
+            
+            //        cam.end();
+        }
+    }
+
+    
+    
+    
     
     // Save frame
     if (saveScreen) {
@@ -170,38 +289,51 @@ void ofApp::draw(){
         }
         
     }
+    
+    // Show the GUI if we want it
+    if (showGui) {
+        gui.draw();
+    }
+}
+
+void ofApp::exit() {
+    gui.saveToFile("settings.xml");
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
     
-    if (key == '1') {
-        one = !one;
+    if (key == OF_KEY_RETURN) {
+        showGui = !showGui;
     }
     
-    if (key == '2') {
-        two = !two;
-    }
+//    if (key == '1') {
+//        one = !one;
+//    }
     
-    if (key == '3') {
-        three = !three;
-    }
+//    if (key == '2') {
+//        two = !two;
+//    }
     
-    if (key == '4') {
-        four = !four;
-    }
+//    if (key == '3') {
+//        three = !three;
+//    }
     
-    if (key == '5') {
-        five = !five;
-    }
+//    if (key == '4') {
+//        four = !four;
+//    }
     
-    if (key == '6') {
-        six = !six;
-    }
+//    if (key == '5') {
+//        five = !five;
+//    }
     
-    if (key == '7') {
-        seven = !seven;
-    }
+//    if (key == '6') {
+//        six = !six;
+//    }
+    
+//    if (key == '7') {
+//        seven = !seven;
+//    }
     
     if (key == OF_KEY_UP) {
         noiseMultiplier += 5;

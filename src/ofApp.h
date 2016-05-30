@@ -51,6 +51,7 @@ class ofApp : public ofBaseApp{
         ofxToggle alternateMainPointsToggle;
         ofxToggle wiggleToggle;
         ofxToggle centerSphereToggle;
+        ofxToggle depthTestToggle;
     
 //        // GUI buttons;
 //        ofxButton blurRefreshButton;
@@ -75,3 +76,5 @@ extern int shapeVertices;
 extern int pointMultiplier;
 extern int radiusMultiplier;
 extern int noiseMultiplier;
+
+extern int maxRadius;

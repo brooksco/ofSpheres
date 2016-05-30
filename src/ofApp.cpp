@@ -14,6 +14,7 @@ bool showGui = true;
 int shapeVertices = 8;
 int pointMultiplier = 200; //200
 int radiusMultiplier = 16;
+int maxRadius = radiusMultiplier * 120;
 int noiseMultiplier = 20; //20
 
 vector<nSphere> nSpheres;
@@ -102,8 +103,8 @@ void ofApp::setup(){
     miscGroup.add(alternateMainPointsToggle.setup("alternate main points (color)", boolAlternateMainPoints));
     miscGroup.add(wiggleToggle.setup("vibration", boolWiggle));
     miscGroup.add(centerSphereToggle.setup("center sphere", boolCenterSphere));
-
     
+    miscGroup.add(depthTestToggle.setup("depth test", true));
     miscGroup.add(blurToggle.setup("blur", false));
     
     gui.add(&miscGroup);
@@ -139,14 +140,22 @@ void ofApp::drawHelper(){
     
     easyCam.begin();
     
-//    // Center sphere
-//    if (boolCenterSphere == true) {
-//        ofSetColor(0, 0, 0, 255);
-//        ofMesh sphere = ofMesh::sphere(20, 16, OF_PRIMITIVE_TRIANGLE_STRIP);
-////        ofSetColor(255, 255, 255, 255);
-//        
-//        sphere.draw();
-//    }
+    if (depthTestToggle == true) {
+        ofEnableDepthTest();
+    }
+
+    
+    // Center sphere
+    if (boolCenterSphere == true) {
+        ofSetColor(0, 0, 0, 255);
+        ofMesh sphere = ofMesh::sphere(20, 16, OF_PRIMITIVE_TRIANGLE_STRIP);
+//        ofSetColor(255, 255, 255, 255);
+        
+        sphere.draw();
+    }
+    
+    ofEnableBlendMode(OF_BLENDMODE_ADD);
+
     
     for (int i = 0; i < nSpheres.size(); i++) {
         
@@ -196,6 +205,9 @@ void ofApp::drawHelper(){
         //        cam.end();
     }
     
+    if (depthTestToggle == true) {
+        ofDisableDepthTest();
+    }
     
     easyCam.end();
 }
@@ -205,7 +217,6 @@ void ofApp::draw(){
     ofBackground(0, 0, 0);
 //    glPointSize(2);
     ofSetColor(255, 255, 255);
-    
 
     
     

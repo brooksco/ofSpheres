@@ -207,7 +207,7 @@ void nSphere::draw() {
                 nSpherePoint *q = &points[i + 1];
                 
                 float distance = ofDist(p->position.x, p->position.y, p->position.z, q->position.x, q->position.y, q->position.z);
-                alpha = ofMap(distance, 0, radius / 8, 80, 0);
+                alpha = ofMap(distance, 0, radius / 8, 160, 60);
                 
                 if (distance > (radius / 12)) {
                     alpha = alpha * .75;
@@ -228,11 +228,18 @@ void nSphere::draw() {
                     // Distance between points
                     float distance = ofDist(p->position.x, p->position.y, p->position.z, q->position.x, q->position.y, q->position.z);
                     // Use that distance relative to radius to set initial alpha
-                    alpha = ofMap(distance, 0, radius/8, 80, 0);
+                    alpha = ofMap(distance, 0, radius / 8, 160, 60); //120
+                    
+//                    if (radius < (radiusMultiplier * radiusMultiplier)) {
+//                        alpha = 255;
+//                    }
+                    
+                    
                     
                     // Create a multiplier based on the radius and an arbitrary max radius
                     // Lowering the max will make the outermost shapes darker
-                    float multiplier = ofMap(radius, 0, 160 * radiusMultiplier, 1, 0);
+                    float multiplier = ofMap(radius, 0, maxRadius, 1, 0);
+                    
                     // Change the alpha value with the multiplier
                     alpha = alpha * multiplier;
                     
@@ -240,12 +247,7 @@ void nSphere::draw() {
                     if (distance > (radius / 12)) {
                         alpha = alpha * .75;
                     }
-                    
-                    //                if (boolAlternatePoints == true) {
-                    //                    strokeWeight(1);
-                    //                } else {
-                    //                    noStroke();
-                    //                }
+
                     
                     ofFill();
                     ofSetColor(255, 255, 255, alpha);
@@ -268,13 +270,17 @@ void nSphere::draw() {
         }
         
         ofFill();
-        ofSetColor(255, 255, 255, 5);
+        int metaAlpha = ofMap(radius, 0, maxRadius, 40, 5); //120
+
+        ofSetColor(255, 255, 255, metaAlpha);
         metaMesh.draw();
         
         
         
         // Alternate points
         if (boolAlternatePoints) {
+            
+            glPointSize(2);
             
             if (altPoints.size() > 0) {
                 
@@ -315,6 +321,8 @@ void nSphere::draw() {
         // Alternate lines
         if (boolAlternateMainPoints) {
             
+            glPointSize(1);
+            
             if (altMainPoints.size() > 0) {
                 
                 ofMesh metaAltMainMesh;
@@ -331,9 +339,9 @@ void nSphere::draw() {
                 
                 ofFill();
                 // Red ish
-                ofSetColor(255, 0, 150, 25);
+//                ofSetColor(255, 0, 150, 50);
                 // Teal ish
-                //                ofSetColor(2, 200, 111, 25);
+                ofSetColor(60, 100, 255, 160);
                 metaAltMainMesh.draw();
                 
             }

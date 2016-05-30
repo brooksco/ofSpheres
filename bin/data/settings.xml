@@ -8,7 +8,8 @@
 		<alternate_main_points__color_>1</alternate_main_points__color_>
 		<vibration>1</vibration>
 		<center_sphere>1</center_sphere>
-		<blur>0</blur>
+		<blur>1</blur>
+	<depth_test>1</depth_test>
 	</Controls>
 <group/>
 </group>

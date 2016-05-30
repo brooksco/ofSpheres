@@ -151,7 +151,6 @@ void nSphere::update() {
     if (altMainPoints.size() > 0) {
         
         for (int i = 0; i < (altMainPoints.size() - 1); i++) {
-            int temp = altMainPoints.size();
             nSpherePoint *p = &altMainPoints[i];
             p->update();
         }
@@ -341,7 +340,8 @@ void nSphere::draw() {
                 // Red ish
 //                ofSetColor(255, 0, 150, 50);
                 // Teal ish
-                ofSetColor(60, 100, 255, 160);
+                ofSetColor(60, 100, 255, 80);
+//                ofSetColor(255, 255, 255, 80);
                 metaAltMainMesh.draw();
                 
             }

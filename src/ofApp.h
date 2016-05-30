@@ -13,6 +13,7 @@ class ofApp : public ofBaseApp{
 		void update();
 		void draw();
     
+        void drawHelper();
         void exit();
 
 		void keyPressed(int key);

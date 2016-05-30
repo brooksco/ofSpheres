@@ -41,15 +41,15 @@ nSphere::nSphere(ofVec3f position, float radius, float noiseFactor, int maxPoint
 
 void nSphere::addPoint() {
     nSpherePoint p = nSpherePoint(radius, currentTheta, currentPhi, lastTheta, lastPhi, noise, noiseFactor, thetaPhiFactor);
-
+    
     lastTheta = currentTheta;
     lastPhi = currentPhi;
     
     currentTheta += ofRandom(-thetaPhiFactor, thetaPhiFactor * 1.2);
     currentPhi += ofRandom(-thetaPhiFactor, thetaPhiFactor * 1.2);
     
-//    currentTheta += ofRandom(-thetaPhiFactor, thetaPhiFactor * (noiseFactor * .2));
-//    currentPhi += ofRandom(-thetaPhiFactor, thetaPhiFactor * (noiseFactor * .2));
+    //    currentTheta += ofRandom(-thetaPhiFactor, thetaPhiFactor * (noiseFactor * .2));
+    //    currentPhi += ofRandom(-thetaPhiFactor, thetaPhiFactor * (noiseFactor * .2));
     
     noise.x += ofRandom(-thetaPhiFactor, thetaPhiFactor);
     noise.y += ofRandom(-thetaPhiFactor, thetaPhiFactor);
@@ -72,9 +72,9 @@ void nSphere::addAltPoint() {
     currentAltTheta += ofRandom(-thetaPhiFactor, thetaPhiFactor * 1.2);
     currentAltPhi += ofRandom(-thetaPhiFactor, thetaPhiFactor * 1.2);
     
-//    noise.x += ofRandom(-thetaPhiFactor, thetaPhiFactor);
-//    noise.y += ofRandom(-thetaPhiFactor, thetaPhiFactor);
-//    noise.z += ofRandom(-thetaPhiFactor, thetaPhiFactor);
+    //    noise.x += ofRandom(-thetaPhiFactor, thetaPhiFactor);
+    //    noise.y += ofRandom(-thetaPhiFactor, thetaPhiFactor);
+    //    noise.z += ofRandom(-thetaPhiFactor, thetaPhiFactor);
     
     altPoints.push_back(p);
 }
@@ -135,29 +135,33 @@ void nSphere::update() {
     }
     
     // Update all the points individually
-    for (int i = 0; i < (points.size() - 1); i++) {
-        nSpherePoint *p = &points[i];
-        p->update();
+    if (points.size() > 0) {
+        
+        for (int i = 0; i < (points.size() - 1); i++) {
+            nSpherePoint *p = &points[i];
+            p->update();
+        }
     }
     
-//    for (int i = 0; i < (altPoints.size() - 1); i++) {
-//        nSpherePoint *p = &altPoints[i];
-//        p->update();
-//    }
+    //    for (int i = 0; i < (altPoints.size() - 1); i++) {
+    //        nSpherePoint *p = &altPoints[i];
+    //        p->update();
+    //    }
     
-    for (int i = 0; i < (altMainPoints.size() - 1); i++) {
-        nSpherePoint *p = &altMainPoints[i];
-        p->update();
+    if (altMainPoints.size() > 0) {
+        
+        for (int i = 0; i < (altMainPoints.size() - 1); i++) {
+            int temp = altMainPoints.size();
+            nSpherePoint *p = &altMainPoints[i];
+            p->update();
+        }
     }
     
     
-
 }
 
 void nSphere::draw() {
-//    ofEnableBlendMode(OF_BLENDMODE_ADD);
-//    glPointSize(2);
-
+    
     if (points.size() > 0) {
         
         ofMesh metaMesh;
@@ -167,7 +171,7 @@ void nSphere::draw() {
         for (int i = 0; i < (points.size() - 1); i++) {
             // Pointers, this hopefully works now
             nSpherePoint *p = &points[i];
-//            p->update();
+            //            p->update();
             
             // Draw spheres at vertices, really inefficient
             if (boolVertex) {
@@ -216,7 +220,7 @@ void nSphere::draw() {
             
             // Mesh between [shapeVertices] points (something like 8)
             if (boolMiniMesh == true) {
-
+                
                 if (i + (shapeVertices - 1) < points.size() && (i % shapeVertices == 0)) {
                     nSpherePoint *q = &points[i + 1];
                     
@@ -273,38 +277,38 @@ void nSphere::draw() {
         if (boolAlternatePoints) {
             
             if (altPoints.size() > 0) {
-            
+                
                 ofMesh metaAltMesh;
                 metaAltMesh.setMode(OF_PRIMITIVE_POINTS);
                 metaAltMesh.enableIndices();
-            
+                
                 for (int i = 0; i < (altPoints.size() - 1); i++) {
                     nSpherePoint *q = &altPoints[i];
                     // This is really interesting
-//                    nSpherePoint *q = &points[i];
-            
-                metaAltMesh.addVertex(ofVec3f(q->position.x, q->position.y, q->position.z));
-            
-                metaAltMesh.addIndex(i);
-            
-            // Make the shape more interesting by systematically adding new indices
-//            int count = floor(i / 4);
-//            if (count > 1) {
-//                // Don't want to go back too far, so limit it
-//                if (count > 2) {
-//                    count = 2;
-//                }
-//                // Add the indices for 7 earlier, up to 4 times or whatever is smaller
-//                for (int j = 1; j < count; j++) {
-//                    metaMesh.addIndex(i - (4 * j));
-//                }
-//            }
+                    //                    nSpherePoint *q = &points[i];
+                    
+                    metaAltMesh.addVertex(ofVec3f(q->position.x, q->position.y, q->position.z));
+                    
+                    metaAltMesh.addIndex(i);
+                    
+                    // Make the shape more interesting by systematically adding new indices
+                    //            int count = floor(i / 4);
+                    //            if (count > 1) {
+                    //                // Don't want to go back too far, so limit it
+                    //                if (count > 2) {
+                    //                    count = 2;
+                    //                }
+                    //                // Add the indices for 7 earlier, up to 4 times or whatever is smaller
+                    //                for (int j = 1; j < count; j++) {
+                    //                    metaMesh.addIndex(i - (4 * j));
+                    //                }
+                    //            }
                 }
-            
+                
                 ofFill();
                 ofSetColor(255, 255, 255, 127);
                 metaAltMesh.draw();
-            
+                
             }
         }
         
@@ -329,14 +333,14 @@ void nSphere::draw() {
                 // Red ish
                 ofSetColor(255, 0, 150, 25);
                 // Teal ish
-//                ofSetColor(2, 200, 111, 25);
+                //                ofSetColor(2, 200, 111, 25);
                 metaAltMainMesh.draw();
                 
             }
         }
-
-
+        
+        
     }
-
+    
 }
 

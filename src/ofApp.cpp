@@ -135,49 +135,48 @@ void ofApp::update(){
 }
 
 //--------------------------------------------------------------
-void ofApp::draw(){
-    ofBackground(0, 0, 0);
-//    glPointSize(2);
-    ofSetColor(255, 255, 255);
+void ofApp::drawHelper(){
     
-    if (blurToggle == true) {
-        blur.begin();
-        ofBackground(0, 0, 0);
-        ofEnableBlendMode(OF_BLENDMODE_ADD);
-    }
-
-//    ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+    easyCam.begin();
+    
+//    // Center sphere
+//    if (boolCenterSphere == true) {
+//        ofSetColor(0, 0, 0, 255);
+//        ofMesh sphere = ofMesh::sphere(20, 16, OF_PRIMITIVE_TRIANGLE_STRIP);
+////        ofSetColor(255, 255, 255, 255);
+//        
+//        sphere.draw();
+//    }
     
     for (int i = 0; i < nSpheres.size(); i++) {
         
-//        long eyeX = (ofGetWindowWidth() / 3) * cos(ofGetFrameNum() * 0.0008);
-//        long eyeZ = (ofGetWindowWidth() / 2) * sin(ofGetFrameNum() * 0.0008);
+        //        long eyeX = (ofGetWindowWidth() / 3) * cos(ofGetFrameNum() * 0.0008);
+        //        long eyeZ = (ofGetWindowWidth() / 2) * sin(ofGetFrameNum() * 0.0008);
         
-//        long eyeX = 0;
-//        long eyeZ = 0;
-//        long eyeY = 0;
-//        centerX = ofGetWindowWidth() / 2 + 1500;
-//        centerY = ofGetWindowHeight() / 2;
-//        centerZ = (ofGetWindowWidth() / 3) * sin(ofGetFrameNum() * 0.00008);
-//        float upX = 0;
-//        float upY = 1;
-//        float upZ = 0;
-//        
-//        ofVec3f camPos;
-//        ofVec3f lookAtPos;
-//        
-//        camPos = ofVec3f(centerX, centerY, centerZ);
-//        lookAtPos = ofVec3f(eyeX, eyeY, eyeZ);
-//        
-//        ofVec3f upVector;
-//        upVector.set(0, 1, 0);
-//        
-//        cam.setPosition(camPos);
-//        cam.lookAt(lookAtPos, upVector);
-
-//        cam.begin();
+        //        long eyeX = 0;
+        //        long eyeZ = 0;
+        //        long eyeY = 0;
+        //        centerX = ofGetWindowWidth() / 2 + 1500;
+        //        centerY = ofGetWindowHeight() / 2;
+        //        centerZ = (ofGetWindowWidth() / 3) * sin(ofGetFrameNum() * 0.00008);
+        //        float upX = 0;
+        //        float upY = 1;
+        //        float upZ = 0;
+        //
+        //        ofVec3f camPos;
+        //        ofVec3f lookAtPos;
+        //
+        //        camPos = ofVec3f(centerX, centerY, centerZ);
+        //        lookAtPos = ofVec3f(eyeX, eyeY, eyeZ);
+        //
+        //        ofVec3f upVector;
+        //        upVector.set(0, 1, 0);
+        //
+        //        cam.setPosition(camPos);
+        //        cam.lookAt(lookAtPos, upVector);
         
-        easyCam.begin();
+        //        cam.begin();
+        
         
         ofPushMatrix();
         
@@ -187,87 +186,48 @@ void ofApp::draw(){
         ofRotateY(ofGetFrameNum() * nSpheres[i].velocity.y * velocityMultiplier);
         ofRotateZ(ofGetFrameNum() * nSpheres[i].velocity.z * velocityMultiplier);
         
-        nSpheres[i].draw();
-        ofPopMatrix();
         
-        // Center sphere
-        if (boolCenterSphere == true) {
-            ofMesh sphere = ofMesh::sphere(20, 16, OF_PRIMITIVE_TRIANGLE_STRIP);
-//                        ofSetColor(255, 255, 255, 255);
-            ofSetColor(0, 0, 0, 255);
-            
-            sphere.draw();
-        }
+        nSpheres[i].draw();
+        
+        
+        ofPopMatrix();
 
         
-        easyCam.end();
-        
-//        cam.end();
+        //        cam.end();
     }
     
-
-  
-//    for (int i = 0; i < nSpheres.size(); i++) {
-//        easyCam.begin();
-//        
-//        ofPushMatrix();
-//        
-//        ofTranslate(nSpheres[i].position.x, nSpheres[i].position.y, nSpheres[i].position.z);
-//        
-//        ofRotateX(ofGetFrameNum() * nSpheres[i].velocity.x * velocityMultiplier);
-//        ofRotateY(ofGetFrameNum() * nSpheres[i].velocity.y * velocityMultiplier);
-//        ofRotateZ(ofGetFrameNum() * nSpheres[i].velocity.z * velocityMultiplier);
-//
-//        nSpheres[i].draw();
-//        ofPopMatrix();
-//        easyCam.end();
-//    }
     
+    easyCam.end();
+}
+
+//--------------------------------------------------------------
+void ofApp::draw(){
+    ofBackground(0, 0, 0);
+//    glPointSize(2);
+    ofSetColor(255, 255, 255);
+    
+
+    
+    
+    // If blur is on, start the blur
+    if (blurToggle == true) {
+        blur.begin();
+        ofBackground(0, 0, 0);
+//        ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+    }
+
+    drawHelper();
     
     if (blurToggle == true) {
         blur.end();
         blur.draw();
     }
     
-    // Draw it a second time
+    // If blur is on, draw it a second time
     if (blurToggle == true) {
-        
-        //        ofEnableBlendMode(OF_BLENDMODE_ADD);
-        //            ofEnableBlendMode(OF_BLENDMODE_ALPHA);
-        
-        for (int i = 0; i < nSpheres.size(); i++) {
-            easyCam.begin();
-            
-            ofPushMatrix();
-            
-            ofTranslate(nSpheres[i].position.x, nSpheres[i].position.y, nSpheres[i].position.z);
-            
-            ofRotateX(ofGetFrameNum() * nSpheres[i].velocity.x * velocityMultiplier);
-            ofRotateY(ofGetFrameNum() * nSpheres[i].velocity.y * velocityMultiplier);
-            ofRotateZ(ofGetFrameNum() * nSpheres[i].velocity.z * velocityMultiplier);
-            
-            nSpheres[i].draw();
-            ofPopMatrix();
-            
-            // Center sphere
-            if (boolCenterSphere == true) {
-                ofMesh sphere = ofMesh::sphere(20, 16, OF_PRIMITIVE_TRIANGLE_STRIP);
-//                            ofSetColor(255, 255, 255, 255);
-                ofSetColor(0, 0, 0, 255);
-                
-                sphere.draw();
-            }
-            
-            
-            easyCam.end();
-            
-            //        cam.end();
-        }
+        drawHelper();
     }
 
-    
-    
-    
     
     // Save frame
     if (saveScreen) {

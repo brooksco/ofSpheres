@@ -15,7 +15,8 @@ class nSpherePoint {
     
 public:
     // Constructors
-    nSpherePoint(float radius, float theta, float phi, float lastTheta, float lastPhi, ofVec3f noise, float noiseFactor, float thetaPhiFactor);
+//    nSpherePoint(float radius, float theta, float phi, float lastTheta, float lastPhi, ofVec3f noise, float noiseFactor, float thetaPhiFactor);
+    nSpherePoint(ofVec3f position, float radius, float theta, float phi, ofVec3f noise);
     
     // Methods
     void update();
@@ -25,13 +26,15 @@ public:
     float radius;
     float theta;
     float phi;
-    float lastTheta;
-    float lastPhi;
-    ofVec3f noise;
-    float noiseFactor;
-    float thetaPhiFactor;
     
+//    float lastTheta;
+//    float lastPhi;
+//    float noiseFactor;
+//    float thetaPhiFactor;
+
+    ofVec3f noise;
     ofVec3f position;
+    
     int weight;
     int alpha;
     

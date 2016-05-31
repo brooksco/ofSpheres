@@ -40,7 +40,37 @@ nSphere::nSphere(ofVec3f position, float radius, float noiseFactor, int maxPoint
 }
 
 void nSphere::addPoint() {
-    nSpherePoint p = nSpherePoint(radius, currentTheta, currentPhi, lastTheta, lastPhi, noise, noiseFactor, thetaPhiFactor);
+//    nSpherePoint p = nSpherePoint(radius, currentTheta, currentPhi, lastTheta, lastPhi, noise, noiseFactor, thetaPhiFactor);
+    
+    ofVec3f pPosition;
+    ofVec3f pNoise;
+    
+//    pPosition.x = cos(currentTheta) * sin(currentPhi) * radius + ofSignedNoise(noise.x) * (noiseFactor * noiseMultiplier);
+//    pPosition.y = sin(currentTheta) * sin(currentPhi) * radius + ofSignedNoise(noise.y) * (noiseFactor * noiseMultiplier);
+//    pPosition.z = cos(currentPhi) * radius + ofSignedNoise(noise.z) * (noiseFactor * noiseMultiplier);
+    
+    float pTheta = currentTheta;
+    float pPhi = currentPhi;
+    
+    pPosition.x = cos(pTheta) * sin(pPhi) * radius;
+    pPosition.y = sin(pTheta) * sin(pPhi) * radius;
+    pPosition.z = cos(pPhi) * radius;
+    
+    pNoise.x = ofSignedNoise(noise.x) * (noiseFactor * noiseMultiplier);
+    pNoise.y = ofSignedNoise(noise.y) * (noiseFactor * noiseMultiplier);
+    pNoise.z = ofSignedNoise(noise.z) * (noiseFactor * noiseMultiplier);
+
+    
+//    float distance = abs(lastTheta - currentTheta) + abs(lastPhi - currentPhi);
+    
+//    int weight = int(ofMap(distance, thetaPhiFactor / 2, thetaPhiFactor * 2, 3, 1));
+//    int alpha = int(ofMap(distance, 0, thetaPhiFactor * 2, 255, 0));
+    
+    float pRadius = pPosition.distance(ofVec3f(0, 0, 0));
+
+    nSpherePoint p = nSpherePoint(pPosition, radius, currentTheta, currentPhi, pNoise);
+
+    
     
     lastTheta = currentTheta;
     lastPhi = currentPhi;
@@ -64,7 +94,31 @@ void nSphere::addPoint() {
 }
 
 void nSphere::addAltPoint() {
-    nSpherePoint p = nSpherePoint(radius, currentAltTheta, currentAltPhi, lastAltTheta, lastAltPhi, noise, noiseFactor, thetaPhiFactor);
+//    nSpherePoint p = nSpherePoint(radius, currentAltTheta, currentAltPhi, lastAltTheta, lastAltPhi, noise, noiseFactor, thetaPhiFactor);
+    
+    ofVec3f pPosition;
+    ofVec3f pNoise;
+    
+//    pPosition.x = cos(currentAltTheta) * sin(currentAltPhi) * radius + ofSignedNoise(noise.x) * (noiseFactor * noiseMultiplier);
+//    pPosition.y = sin(currentAltTheta) * sin(currentAltPhi) * radius + ofSignedNoise(noise.y) * (noiseFactor * noiseMultiplier);
+//    pPosition.z = cos(currentAltPhi) * radius + ofSignedNoise(noise.z) * (noiseFactor * noiseMultiplier);
+    
+    float pTheta = currentAltTheta;
+    float pPhi = currentAltPhi;
+    
+    pPosition.x = cos(pTheta) * sin(pPhi) * radius;
+    pPosition.y = sin(pTheta) * sin(pPhi) * radius;
+    pPosition.z = cos(pPhi) * radius;
+    
+    pNoise.x = ofSignedNoise(noise.x) * (noiseFactor * noiseMultiplier);
+    pNoise.y = ofSignedNoise(noise.y) * (noiseFactor * noiseMultiplier);
+    pNoise.z = ofSignedNoise(noise.z) * (noiseFactor * noiseMultiplier);
+    
+    float pRadius = pPosition.distance(ofVec3f(0, 0, 0));
+    
+    nSpherePoint p = nSpherePoint(pPosition, pRadius, currentAltTheta, currentAltPhi, pNoise);
+    
+    
     
     lastAltTheta = currentAltTheta;
     lastAltPhi = currentAltPhi;
@@ -143,10 +197,13 @@ void nSphere::update() {
         }
     }
     
-    //    for (int i = 0; i < (altPoints.size() - 1); i++) {
-    //        nSpherePoint *p = &altPoints[i];
-    //        p->update();
-    //    }
+    if (altPoints.size() > 0) {
+        
+        for (int i = 0; i < (altPoints.size() - 1); i++) {
+            nSpherePoint *p = &altPoints[i];
+            p->update();
+        }
+    }
     
     if (altMainPoints.size() > 0) {
         

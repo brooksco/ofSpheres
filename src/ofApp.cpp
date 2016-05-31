@@ -191,9 +191,10 @@ void ofApp::drawHelper(){
         
         ofTranslate(nSpheres[i].position.x, nSpheres[i].position.y, nSpheres[i].position.z);
         
-        ofRotateX(ofGetFrameNum() * nSpheres[i].velocity.x * velocityMultiplier);
-        ofRotateY(ofGetFrameNum() * nSpheres[i].velocity.y * velocityMultiplier);
-        ofRotateZ(ofGetFrameNum() * nSpheres[i].velocity.z * velocityMultiplier);
+        // Rotation
+//        ofRotateX(ofGetFrameNum() * nSpheres[i].velocity.x * velocityMultiplier);
+//        ofRotateY(ofGetFrameNum() * nSpheres[i].velocity.y * velocityMultiplier);
+//        ofRotateZ(ofGetFrameNum() * nSpheres[i].velocity.z * velocityMultiplier);
         
         
         nSpheres[i].draw();

@@ -5,8 +5,8 @@
 		<mini_meshes__fill_>1</mini_meshes__fill_>
 		<vertex_spheres>0</vertex_spheres>
 		<alternate_points>1</alternate_points>
-		<alternate_main_points__color_>1</alternate_main_points__color_>
-		<vibration>1</vibration>
+		<alternate_main_points__color_>0</alternate_main_points__color_>
+		<vibration>0</vibration>
 		<center_sphere>1</center_sphere>
 		<blur>1</blur>
 	<depth_test>1</depth_test>

@@ -9,42 +9,33 @@
 #include "ofApp.h"
 #include "nSpherePoint.h"
 
-nSpherePoint::nSpherePoint(float radius, float theta, float phi, float lastTheta, float lastPhi, ofVec3f noise, float noiseFactor, float thetaPhiFactor) {
+nSpherePoint::nSpherePoint(ofVec3f position, float radius, float theta, float phi, ofVec3f noise) {
     
+    this->position = position;
     this->radius = radius;
+
     this->theta = theta;
     this->phi = phi;
-    this->lastTheta = lastTheta;
-    this->lastPhi = lastPhi;
+    
     this->noise = noise;
-    this->noiseFactor = noiseFactor;
-    this->thetaPhiFactor = thetaPhiFactor;
     
-    position.x = cos(theta) * sin(phi) * radius + ofSignedNoise(noise.x) * (noiseFactor * noiseMultiplier);
-    position.y = sin(theta) * sin(phi) * radius + ofSignedNoise(noise.y) * (noiseFactor * noiseMultiplier);
-    position.z = cos(phi) * radius + ofSignedNoise(noise.z) * (noiseFactor * noiseMultiplier);
-    
-//    position.x = cos(theta) * sin(phi) * radius;
-//    position.y = sin(theta) * sin(phi) * radius;
-//    position.z = cos(phi) * radius;
-    
-    float distance = abs(lastTheta - theta) + abs(lastPhi - phi);
-
-    weight = int(ofMap(distance, thetaPhiFactor / 2, thetaPhiFactor * 2, 3, 1));
-    alpha = int(ofMap(distance, 0, thetaPhiFactor * 2, 255, 0));
 }
 
 void nSpherePoint::update() {
-//    if (seven) {
-//        position.x = position.x + ofMap(ofSignedNoise(noise.x), -1, 1, -1, 1);
-//        position.y = position.y + ofMap(ofSignedNoise(noise.y), -1, 1, -1, 1);
-//        position.z = position.z + ofMap(ofSignedNoise(noise.z), -1, 1, -1, 1);
-//    }
+
+    position.x = radius * cos(theta) * sin(phi) + noise.x;
+    position.y = radius * sin(theta) * sin(phi) + noise.y;
+    position.z = radius * cos(phi) + noise.z;
+    
     if (boolWiggle) {
         position.x = position.x + ofMap(ofRandom(10), 0, 10, -.5, .5);
         position.y = position.y + ofMap(ofRandom(10), 0, 10, -.5, .5);
         position.z = position.z + ofMap(ofRandom(10), 0, 10, -.5, .5);
     }
+
+    
+    theta += ofMap(radius, 0, maxRadius, .001, .0001);
+    phi += ofMap(radius, 0, maxRadius, .001, .0001);
     
 }
 

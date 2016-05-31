@@ -82,7 +82,7 @@ void ofApp::setup(){
     
     // Setup blur
 //    blur.setup(ofGetWindowWidth(), ofGetWindowHeight(), blurRadiusSlider, blurShapeSlider, blurPassesSlider, blurDownsampleSlider);
-    blur.setup(ofGetWindowWidth(), ofGetWindowHeight(), 50, .2, 1, .1);
+    blur.setup(ofGetWindowWidth(), ofGetWindowHeight(), 25, .2, 1, .1);
     
     
     // Setup GUI
